@@ -65,6 +65,8 @@ let client_secret = process.env.NAVER_secret;
 let article = {};
 let prinum = 0;
 
+function splite() {}
+
 function findPress(data) {
   let ran = newsList.length;
   for (let i = 0; i < ran; i++) {
@@ -74,7 +76,7 @@ function findPress(data) {
   }
   return "NaN";
 }
-function makeDate(month, year) {
+function makeDate(year, month, day) {
   let mon;
   switch (month) {
     case "Jan":
@@ -114,21 +116,29 @@ function makeDate(month, year) {
       mon = "12";
       break;
   }
-  return year + "." + mon;
+  return year + "-" + mon + "-" + day; 
 }
 
-app.post("/api/getjson", function (req, res) {
+function reDate(data){
+  let ran = data.length;
+  for(let i =0;i<ran;i++){
+    data[i].date = `${data[i].date.substring(0,4)}.${data[i].date.substring(5,6)}`;
+  }
+  return data;
+}
+
+app.get("/api/getjson", function (req, res) {
   let sql = `select * from news order by date`;
   connection.query(sql, function (err, results, fields) {
     if (err) {
       console.log(err);
     }
     console.log(results);
-    res.send(results);
+    res.send(reDate(results));
   });
 });
 
-app.get("/search", function (req, res) {
+app.get("/api/news", function (req, res) {
   let api_url =
     "https://openapi.naver.com/v1/search/news.json?query=" +
     encodeURI("초코뮤직") +
@@ -155,19 +165,22 @@ app.get("/search", function (req, res) {
           body[i].title = body[i].title.replace("</b>", "");
           body[i].description = body[i].description.replace("<b>", "");
           body[i].description = body[i].description.replace("</b>", "");
+
+          // body[i].pubDate.substring(8, 11) month
+          // body[i].pubDate.substring(12, 16) year
+          // body[i].pubDate.substring(5,7) day
+          let year = body[i].pubDate.substring(12, 16);
+          let month = body[i].pubDate.substring(8, 11);
+          let day = body[i].pubDate.substring(5,7);
           let press = findPress(body[i].link);
           sql = `INSERT INTO news(title, link, date, press) values('${
             body[i].title
-          }', '${body[i].link}', '${makeDate(
-            body[i].pubDate.substring(8, 11),
-            body[i].pubDate.substring(12, 16),
-            "y"
-          )}', '${press}')`;
+          }', '${body[i].link}', '${makeDate(year, month, day)}', '${press}')`;
           connection.query(sql, function (err, results, fields) {
             if (err) {
               console.log(err);
             }
-            console.log(results);
+            //console.log(results);
           });
         }
       }
@@ -178,6 +191,8 @@ app.get("/search", function (req, res) {
     }
   });
 });
-app.listen(3001, function () {
-  console.log("http://127.0.0.1:3001/ app listening on port 3001!");
+
+let port = 3001
+app.listen(port, function () {
+  console.log(`http://127.0.0.1:${port}/ app listening on port ${port}!`);
 });
