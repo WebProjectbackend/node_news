@@ -7,9 +7,9 @@ let Press = require("./component/press");
 let Splite = require("./component/spliteDate");
 let Make = require("./component/makeDate");
 let request = require("request");
-const { getPriority } = require("os");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 const conn = {
   host: process.env.DB_host,
   port: process.env.DB_port,
@@ -77,11 +77,11 @@ app.get("/api/news", function (req, res) {
           if (press == "네이버 뉴스") {
             goUrl(body[i].link, res);
           }
-          /*connection.query(sql, function (err, results, fields) {
+          connection.query(sql, function (err, results, fields) {
             if (err) {
               console.log(err);
             }
-          });*/
+          });
         }
       }
       console.log("good");
