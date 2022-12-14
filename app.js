@@ -30,7 +30,6 @@ app.get("/api/get_news", function (req, res) {
     if (err) {
       console.log(err);
     }
-    console.log(results);
     res.send(Splite.reDate(results));
   });
 });
@@ -58,8 +57,12 @@ app.get("/api/news", function (req, res) {
           body[i].title.includes("초코뮤직") ||
           body[i].description.includes("초코뮤직")
         ) {
+          body[i].pubDate.toString();
           body[i].title = body[i].title.replace("<b>", "");
           body[i].title = body[i].title.replace("</b>", "");
+          body[i].title = body[i].title.replace("&apos;", "'");
+          body[i].title = body[i].title.replace("&quot;", '"');
+
           body[i].description = body[i].description.replace("<b>", "");
           body[i].description = body[i].description.replace("</b>", "");
 
@@ -67,6 +70,7 @@ app.get("/api/news", function (req, res) {
           let month = body[i].pubDate.substring(8, 11);
           let day = body[i].pubDate.substring(5, 7);
           let press = Press.findPress(body[i].link);
+
           sql = `INSERT INTO news(title, link, date, press) values('${
             body[i].title
           }', '${body[i].link}', '${Make.makeDate(
@@ -74,12 +78,9 @@ app.get("/api/news", function (req, res) {
             month,
             day
           )}', '${press}')`;
-          if (press == "네이버 뉴스") {
-            goUrl(body[i].link, res);
-          }
           connection.query(sql, function (err, results, fields) {
             if (err) {
-              console.log(err);
+              //console.log(err);
             }
           });
         }

@@ -1,42 +1,37 @@
-exports.makeDate = function (year, month, day) {
-  let mon;
-  switch (month) {
+function reMonth(mon) {
+  switch (mon) {
     case "Jan":
-      mon = "1";
-      break;
+      return "1";
     case "Feb":
-      mon = "2";
-      break;
+      return "2";
     case "Mar":
-      mon = "3";
-      break;
+      return "3";
     case "Apr":
-      mon = "4";
-      break;
+      return "4";
     case "May":
-      mon = "5";
-      break;
+      return "5";
     case "Jun":
-      mon = "6";
-      break;
+      return "6";
     case "Jul":
-      mon = "7";
-      break;
+      return "7";
     case "Aug":
-      mon = "8";
-      break;
+      return "8";
     case "Sep":
-      mon = "9";
-      break;
+      return "9";
     case "Oct":
-      mon = "10";
-      break;
+      return "10";
     case "Nov":
-      mon = "11";
-      break;
+      return "11";
     case "Dec":
-      mon = "12";
-      break;
+      return "12";
   }
+}
+
+exports.makeMon = function (data) {
+  return reMonth(data);
+};
+
+exports.makeDate = function (year, month, day) {
+  let mon = reMonth(month);
   return year + "-" + mon + "-" + day;
 };

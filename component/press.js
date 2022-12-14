@@ -19,6 +19,9 @@ let newsList = [
   "일요신문",
   "이뉴스투데이",
   "비지니스코리아",
+  "더파워",
+  "아주경제",
+  "잡포스트",
 ];
 let newsListNumber = [
   "n.news.naver",
@@ -41,6 +44,9 @@ let newsListNumber = [
   "ilyo",
   "enewstoday",
   "businesskorea",
+  "thepowernews",
+  "ajunews",
+  "job-post",
 ];
 
 exports.findPress = function (data) {
